@@ -12,6 +12,7 @@ from operator import itemgetter
 
 import first
 import thinkstats2
+import nsfg
 
 
 def Mode(hist):
@@ -21,7 +22,13 @@ def Mode(hist):
 
     returns: value from Hist
     """
-    return 0
+    max_val = 0
+    max_count = 0
+    for val, count in hist.Items():
+        if count > max_count:
+            max_val = val
+            max_count = count
+    return max_val
 
 
 def AllModes(hist):
@@ -31,7 +38,21 @@ def AllModes(hist):
 
     returns: iterator of value-freq pairs
     """
-    return []
+    s = sorted(hist.Items(), key=lambda pair: pair[1])
+    s.reverse()
+    return s
+
+def WeightComparison():
+    preg = nsfg.ReadFemPreg()
+
+    live = preg[preg.outcome == 1]
+    firsts = live[live.birthord == 1]
+    others = live[live.birthord != 1]
+
+    d = thinkstats2.CohenEffectSize(firsts.totalwgt_lb, others.totalwgt_lb)
+    print(d)
+    print("Still a really small effect size, though not as small as difference in pregnancy length")
+
 
 
 def main(script):
@@ -56,6 +77,7 @@ def main(script):
 
     print('%s: All tests passed.' % script)
 
+    WeightComparison()
 
 if __name__ == '__main__':
     main(*sys.argv)
