@@ -81,6 +81,22 @@ def BinData(data, low, high, n):
     data = np.round(data) * (high - low) / n + low
     return data
 
+def ObservedPmf(pmf, obs_speed):
+    """Creates a Pmf of the speeds of runners
+    observed by someone running at obs_speed.
+
+    pmf: a Pmf of runners' speeds
+    obs_speed: the speed of an observer
+
+    returns: a new Pmf of speeds as seen by the observer
+    """
+    new_pmf = pmf.Copy(label='observed speeds')
+    for speed, prob in pmf.Items():
+        scalar = abs((obs_speed - speed) / obs_speed)
+        new_pmf.Mult(speed, scalar)
+    new_pmf.Normalize()
+
+    return new_pmf
 
 def main():
     results = ReadResults()
@@ -89,11 +105,14 @@ def main():
     speeds = BinData(speeds, 3, 12, 100)
 
     pmf = thinkstats2.Pmf(speeds, 'speeds')
+    pmf2 = ObservedPmf(pmf, 7.5)
 
-    thinkplot.Pmf(pmf)
+    thinkplot.PrePlot(2)
+    thinkplot.Pmfs([pmf, pmf2])
     thinkplot.Show(title='PMF of running speed',
                    xlabel='speed (mph)',
                    ylabel='probability')
+
 
 
 if __name__ == '__main__':
