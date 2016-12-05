@@ -61,6 +61,19 @@ def ReadData(filename='hinc06.csv'):
 
 def main():
     df = ReadData()
+    cdf = thinkstats2.Cdf(df['ps'])
+
+    thinkplot.PrePlot(rows=1, cols=2)
+    thinkplot.SubPlot(1)
+    scale = thinkplot.Cdf(cdf, xscale='log')
+    thinkplot.Config(title='logx', **scale)
+
+    thinkplot.SubPlot(2)
+    scale = thinkplot.Cdf(cdf, transform='pareto')
+    thinkplot.Config(title='pareto', **scale)
+
+    thinkplot.show(legend=False)
+    
     print(df)
 
 
