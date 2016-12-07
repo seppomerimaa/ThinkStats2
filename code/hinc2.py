@@ -52,6 +52,18 @@ def main():
     log_sample = InterpolateSample(df, log_upper=6.0)
 
     log_cdf = thinkstats2.Cdf(log_sample)
+
+    print("median", thinkstats2.Median(log_sample))
+    print("pearson's median skewness", thinkstats2.PearsonMedianSkewness(log_sample))
+    print("skewness", thinkstats2.Skewness(log_sample))
+    print("mean", log_cdf.Mean())
+
+    print("the higher our log_upper, the more right-skewed (according to g_1) or at least less left-skewed (according to g_p) things get")
+    print("the mean moves to the right a bit, too.")
+
+    print("proportion of the population with income < mean", log_cdf.Prob(log_cdf.Mean()))
+    print("the higher the upper bound, the greater the proprtion below the mean.")
+
     thinkplot.Cdf(log_cdf)
     thinkplot.Show(xlabel='household income',
                    ylabel='CDF')
